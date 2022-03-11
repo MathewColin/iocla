@@ -7,6 +7,7 @@ int main()
     PyObject *pValue;
 
     char *msg = "Hello World!";
+    char *ss = "lo";
 
     setenv("PYTHONPATH","./python_modules",1);
     
@@ -51,6 +52,51 @@ int main()
          *  TODO - Apelați funcția creată de voi din modulul my_module.py
          *  și afișați un mesaj corespunzător în funcție de rezultat.
          */
+        
+        pythonArgument = PyTuple_New(2);
+        if (pythonArgument == NULL) {
+            fprintf(stderr, "pythonArgument is null.\n");
+            return 0;
+        }
+
+        pValue = PyUnicode_DecodeFSDefault(msg);
+        if (pValue == NULL) {
+            fprintf(stderr, "pValue is null.\n");
+            return 0;
+        }
+
+        if (PyTuple_SetItem(pythonArgument, 0, pValue) < 0) {
+            fprintf(stderr, "PyTuple_SetItem failed.\n");
+            return 0;
+        }
+
+        pValue = PyUnicode_DecodeFSDefault(ss);
+        if (pValue == NULL) {
+            fprintf(stderr, "pValue is null.\n");
+            return 0;
+        }
+
+        if (PyTuple_SetItem(pythonArgument, 1, pValue) < 0) {
+            fprintf(stderr, "PyTuple_SetItem failed.\n");
+            return 0;
+        }
+
+        pFunc = PyObject_GetAttrString(pModule, "subsir");
+        if (pFunc == NULL) {
+            fprintf(stderr, "pFunc is null.\n");
+            return 0;
+        }
+        PyObject *pres = PyObject_CallObject(pFunc, pythonArgument);
+
+        int x = PyLong_AsLong(pres);
+        //printf("%d\n\n\n", x);
+        if (x != -1)
+            printf("%s", msg + x);
+        else
+            printf("Nu exista acest subsir\n");
+        Py_DECREF(pFunc);
+        Py_DECREF(pythonArgument);
+        Py_DECREF(pres);
     } else {
         fprintf(stderr, "pModule is null.\n");
         return 0;
