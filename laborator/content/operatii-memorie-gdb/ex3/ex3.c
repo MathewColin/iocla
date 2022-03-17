@@ -5,6 +5,9 @@
 #include <time.h>
 #include "pixel.h"
 
+#define GET_PIXEL(a, i, j) (*(*(a + i) + j))
+
+
 /*
 	TODO a
 	Functia primeste ca parametru o imagine si intoarce imaginea rasturnata.
@@ -13,7 +16,16 @@
 	linia n - 1, etc.
 */
 
-void reversePic(Picture *pic);
+void reversePic(Picture *pic)
+{
+	int *A;
+	int n = pic->height;
+	for (int i = 0; i < n / 2; i++) {
+		Pixel *a = *(pic->pix_array + i);
+		(*(pic->pix_array + i)) = (*(pic->pix_array + n - i - 1));
+		(*(pic->pix_array + n - i - 1)) = a;
+	}
+}
 
 /*
 	TODO b
@@ -25,8 +37,15 @@ void reversePic(Picture *pic);
 	p.b = 0.11 * p.b;
 */
 
-void colorToGray(Picture *pic);
-
+void colorToGray(Picture *pic)
+{
+	for (int i = 0; i < pic->height; i++)
+		for (int j = 0; j < pic->width; j++) {
+			(*(*(pic->pix_array + i) + j)).R *= 0.3;
+			(*(*(pic->pix_array + i) + j)).G *= 0.59;
+			(*(*(pic->pix_array + i) + j)).B *= 0.11;
+		}
+}
 /*
 	Structura unui pixel, cea a unei imagini, precum si generarea acestora
 	sunt definite in pixel.h. Programul primeste de la tastatura inaltimea
@@ -43,6 +62,13 @@ int main() {
 	Pixel **pix_array = generatePixelArray(height, width);
 	Picture *pic = generatePicture(height, width, pix_array);
 
+	printPicture(pic);
+
+	reversePic(pic);
+	printf("\n");
+	printPicture(pic);
+	printf("\n");
+	colorToGray(pic);
 	printPicture(pic);
 
 	freePicture(&pic);
