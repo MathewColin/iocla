@@ -22,7 +22,7 @@ main:
     mov al, byte [num1]
     mov bl, byte [num2]
     mul bl
-    
+
     ; Print result in hexa
     PRINTF32 `%s\x0`, print_mesaj
     xor ebx, ebx
@@ -31,6 +31,34 @@ main:
 
 
    ; TODO: Implement multiplication for dw and dd data types.
+
+   ; Multiplication for word
+    xor eax, eax
+    xor ebx, ebx
+    mov ax, word [num1_w]
+    mov bx, word [num2_w]
+    mul ebx
+
+    ; Print result in hexa
+    PRINTF32 `%s\x0`, print_mesaj
+    xor ebx, ebx
+    mov ebx, eax
+    PRINTF32 `%x\n\x0`, eax
+
+    ; Multiplication for dd
+    xor edx, edx
+    xor eax, eax
+    xor ebx, ebx
+    mov eax, dword [num1_d]
+    mov ebx, dword [num2_d]
+    mul ebx
+
+    ; Print result in hexa
+    PRINTF32 `%s\x0`, print_mesaj
+    xor ebx, ebx
+    mov ebx, eax
+    PRINTF32 `%x\x0`, edx
+    PRINTF32 `%x\n\x0`, eax
 
     leave
     ret
