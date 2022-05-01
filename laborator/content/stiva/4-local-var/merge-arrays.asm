@@ -16,6 +16,7 @@ section .text
 extern printf
 global main
 main:
+    mov ebp, esp
     mov eax, 0 ; counter used for array_1
     mov ebx, 0 ; counter used for array_2
     mov ecx, 0 ; counter used for the output array
@@ -26,12 +27,18 @@ merge_arrays:
     cmp dl, dh
     jg array_2_lower
 array_1_lower:
-    mov byte [array_output + ecx], dl
+    ;mov byte [array_output + ecx], dl
+    xor edx, edx
+    mov dl, byte [array_1 + eax]
+    push edx
     inc eax
     inc ecx
     jmp verify_array_end
 array_2_lower:
-    mov byte [array_output + ecx], dh
+    ;mov byte [array_output + ecx], dh
+    xor edx, edx
+    mov dl, byte [array_2 + ebx]
+    push edx
     inc ecx
     inc ebx
 
@@ -43,32 +50,42 @@ verify_array_end:
     jmp merge_arrays
 
 copy_array_1:
+    xor edx, edx
     mov dl, byte [array_1 + eax]
-    mov byte [array_output + ecx], dl
+    ;mov byte [array_output + ecx], dl
+    push edx
     inc ecx
     inc eax
     cmp eax, ARRAY_1_LEN
     jb copy_array_1
     jmp print_array
 copy_array_2:
-    mov dh, byte [array_2 + ebx]
-    mov byte [array_output + ecx], dh
+    xor edx, edx
+    mov dl, byte [array_2 + ebx]
+    ;mov byte [array_output + ecx], dh
+    push edx
     inc ecx
     inc ebx
     cmp ebx, ARRAY_2_LEN
     jb copy_array_2
 
+
 print_array:
     PRINTF32 `Array merged:\n\x0`
-    mov ecx, 0
+    xor ecx, ecx
+    xor edx, edx
 print:
-    mov al, byte [array_output + ecx]
+    mov edx, ARRAY_OUTPUT_LEN;
+    sub edx, ecx
+    sub edx, 1
+    mov eax, dword [esp + 4 * edx]
     PRINTF32 `%d \x0`, eax
     inc ecx
     cmp ecx, ARRAY_OUTPUT_LEN
     jb print
 
     PRINTF32 `\n\x0`
+    mov esp, ebp
     xor eax, eax
     ret
     
