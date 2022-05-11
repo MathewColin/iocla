@@ -4,13 +4,37 @@
 
 section .text
 
+
 extern printf
 global main
 main:
     mov ebp, esp
 
     ; TODO - replace below instruction with the algorithm for the Fibonacci sequence
-    sub esp, NUM_FIBO * 4
+    
+    mov ecx, NUM_FIBO
+    xor eax, eax
+    xor ebx, ebx
+    mov ebx, 1
+    push eax
+    push ebx
+    dec ecx
+    dec ecx
+
+loop_fibo:
+    cmp ecx, 0
+    je out
+    mov edx, eax
+    add edx, ebx
+    mov eax, ebx
+    mov ebx, edx
+    push edx
+    dec ecx
+    jmp loop_fibo
+
+out:
+    mov ecx, NUM_FIBO
+    
 
     mov ecx, NUM_FIBO
 print:
