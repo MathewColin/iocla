@@ -17,5 +17,9 @@ main:
 
     ; TODO: call puts on string
 
+    push mystring
+    call puts
+    add esp, 4
+
     leave
     ret
