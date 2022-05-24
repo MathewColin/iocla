@@ -4,7 +4,8 @@
 ; Fill buffer with data from standard input.
 ; Buffer is stored on the stack.
 ;
-
+;Pentru a afisa FLOW, am introdus acest sir:
+;0000000000000000000000000000000000000000000000000000000000000000FLOW
 extern printf
 extern puts
 extern strlen
