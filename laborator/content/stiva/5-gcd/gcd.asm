@@ -6,8 +6,11 @@ extern printf
 global main
 main:
     ; input values (eax, edx): the 2 numbers to compute the gcd for
+    mov ebp, esp
     mov eax, 49
     mov edx, 28
+    mov ecx, eax
+    mov ebx, edx
 
     push eax
     push edx
@@ -36,9 +39,11 @@ L3:
 print:
 
     ; TODO 1: solve the 'Segmentation fault!' error
+    mov esp, ebp
 
     ; TODO 2: print the result in the form of: "gdc(eax, edx)=7" with PRINTF32 macro
     ; output value in eax
+    PRINTF32 `gdc(%d, %d)=%d \n\x0`, ecx, ebx, eax
 
     xor eax, eax
     ret
