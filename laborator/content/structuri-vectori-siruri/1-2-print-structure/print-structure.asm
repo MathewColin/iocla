@@ -38,10 +38,14 @@ main:
     push ebp
     mov ebp, esp
 
-    ; TODO: Update name, surname, birth_year, gender and age such that:
+    ; TODO: Update birth_year, gender and age such that:
     ; birth_year is 1993
     ; age is 22
     ; group is '323CA'
+
+    mov byte[sample_student + 64], 22
+    mov byte[sample_student + 67], '3'
+    mov word[sample_student + 74], 1993
 
     lea ebx, [string_name]
     push ebx

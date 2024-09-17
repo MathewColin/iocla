@@ -38,9 +38,12 @@ get_int:
     ; The first argument is a pointer to the beginning of the structure, so you
     ; must use it to calculate the actual address of the data you want to get.
     ; TODO --- move the int's value to `eax` to return it
-
+    mov ebx, [ebp + 8]
+    lea ecx, [ebx + int_x]
     ; Instructions used to clear the function stack frame and return to the
     ; caller functions. Do not modify them.
+    mov eax, [ecx]
+
     leave
     ret
 
@@ -56,6 +59,14 @@ get_char:
     ; The first argument is a pointer to the beginning of the structure, so you
     ; must use it to calculate the actual address of the data you want to get.
     ; TODO --- move the char's value to `eax` to return it.
+   
+
+    mov ebx, [ebp + 8]
+    lea ecx, [ebx + char_y]
+
+    xor eax, eax
+    mov al, [ecx]
+
 
     ; Instructions used to clear the function stack frame and return to the
     ; caller functions. Do not modify them.
@@ -71,9 +82,11 @@ get_string:
     push ebp
     mov ebp, esp
 
+    mov ebx, [ebp + 8]
     ; The first argument is a pointer to the beginning of the structure, so you
     ; must use it to calculate the actual address of the data you want to get.
     ; TODO --- move the string's address to `eax` to return it.
+    lea eax, [ebx + string_s]
 
     ; Instructions used to clear the function stack frame and return to the
     ; caller functions. Do not modify them.
@@ -91,6 +104,13 @@ set_int:
 
     ; The first argument is a pointer to the beginning of the structure, so you
     ; must use it to calculate the actual address of the data you want to set.
+    
+
+    mov ebx, [ebp + 8]
+    mov ecx, [ebp + 12]
+    lea edx, [ebx + int_x]
+    mov [edx], ecx
+
 
     ; Instructions used to clear the function stack frame and return to the
     ; caller functions. Do not modify them.
@@ -109,6 +129,13 @@ set_char:
     ; The first argument is a pointer to the beginning of the structure, so you
     ; must use it to calculate the actual address of the data you want to set.
 
+
+    mov ebx, [ebp + 8]
+    mov ecx, [ebp + 12]
+    lea edx, [ebx + char_y]
+    mov [edx], cl
+
+
     ; Instructions used to clear the function stack frame and return to the
     ; caller functions. Do not modify them.
     leave
@@ -125,6 +152,16 @@ set_string:
 
     ; The first argument is a pointer to the beginning of the structure, so you
     ; must use it to calculate the actual address of the data you want to set.
+
+
+    mov ecx, 14
+
+    mov edx, [ebp + 8]
+    lea edi, [edx + string_s]
+    mov esi, [ebp + 12]
+
+    rep movsb
+
 
     ; Instructions used to clear the function stack frame and return to the
     ; caller functions. Do not modify them.
@@ -146,10 +183,10 @@ main:
     add esp, 4
 
     ;uncomment when get_int is ready
-    ;push eax
-    ;push int_format
-    ;call printf
-    ;add esp, 8
+    push eax
+    push int_format
+    call printf
+    add esp, 8
 
     movzx edx, byte [new_char]
     ; movzx is the same as
@@ -165,10 +202,10 @@ main:
     add esp, 4
 
     ;uncomment when get_char is ready
-    ;push eax
-    ;push char_format
-    ;call printf
-    ;add esp, 8
+    push eax
+    push char_format
+    call printf
+    add esp, 8
 
     mov edx, new_string
     push edx
@@ -181,11 +218,32 @@ main:
     add esp, 4
 
     ;uncomment when get_string is ready
-    ;push eax
-    ;push string_format
-    ;call printf
-    ;add esp, 8
+    push eax
+    push string_format
+    call printf
+    add esp, 8
 
     xor eax, eax
+
+    mov ax, word[sample_obj]
+
+    PRINTF32 `%hu\n\x0`, eax
+
+    xor eax, eax
+
+    mov al, byte[sample_obj + 4]
+
+    PRINTF32 `%c\n\x0`, eax
+
+    xor eax, eax
+    mov ecx, 5
+pr:
+    cmp byte[sample_obj + ecx], 0
+    je exit
+    PRINTF32 `%c\x0`, [sample_obj + ecx]
+    add ecx, 1
+    jmp pr
+exit:
+    PRINTF32 `\n\x0`
     leave
     ret
