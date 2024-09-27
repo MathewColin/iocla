@@ -3,19 +3,19 @@ LDEFLAGS = -nostdinc -nostdlib -no-pie -m elf_i386
 LDFLAGS = -nostdinc -nostdlib -no-pie -m32
 AS = nasm
 ASFLAGS = -f elf32
-OBJ = hello.o start.o puts.o
+OBJ = name.o start.o puts.o
 
 .DEFAULT_GOAL: all
 
 .PHONY: all clean
 
-all: hello
+all: name
 
-hello: hello.o start.o puts.o
-	ld $(LDEFLAGS) hello.o start.o puts.o -o hello
+name: name.o start.o puts.o
+	ld $(LDEFLAGS) name.o start.o puts.o -o name
 
-hello.o:
-	gcc $(CFLAGS) -c hello.c -o hello.o
+name.o:
+	gcc $(CFLAGS) -c name.c -o name.o
 
 start.o: start.asm
 	$(AS) $(ASFLAGS) -o $@ $<
@@ -24,5 +24,5 @@ puts.o: puts.asm
 	$(AS) $(ASFLAGS) -o $@ $<
 
 clean:
-	-rm -f hello hello.o start.o puts.o
+	-rm -f name name.o start.o puts.o
 	-rm -f *~

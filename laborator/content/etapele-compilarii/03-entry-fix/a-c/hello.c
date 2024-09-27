@@ -14,4 +14,11 @@ int my_main(void)
 {
 	hi();
 	bye();
+	return 0;
+}
+
+int main(void)
+{
+	my_main();
+	return 0;
 }
